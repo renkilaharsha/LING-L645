@@ -4,7 +4,7 @@ from numpy import dot
 from ast import literal_eval
 import numpy as np
 import seaborn as sns
-
+from project import *
 
 
 
@@ -29,7 +29,7 @@ class MultilingualAnalysis:
                 #cossim_dict["{}_{}_{}".format(language, lang, column)] = cosine_similarity(literal_eval(df["{}_{}_embeddings".format(lang,column)]),literal_eval(df_lang["{}_{}_embeddings".format(language,column)]))
                 for i in range(len(df)):
                    cossim_dict["{}_{}_{}".format(language, lang,column)].append(self.cosine_similarity(np.array(literal_eval(df["{}_{}_embeddings".format(lang,column)].iloc[i])),np.array(literal_eval(df_lang["{}_{}_embeddings".format(language,column)].iloc[i]))))
-        self.plot_density_distribution(cossim_dict,"/Users/harsharenkila/PycharmProjects/ANLP/project/output/{}.png".format("Xlmr_Bert"),column)
+        self.plot_density_distribution(cossim_dict,"/Users/harsharenkila/PycharmProjects/ANLP/project/output/{}.png".format("Xlmr_Bert"),camel_case(column))
         return cossim_dict
 
     def plot_density_distribution(self,cossim_dict,path,column):
@@ -48,8 +48,8 @@ class MultilingualAnalysis:
         plt.title('{} Density Plot with Language-pair cosine similarity'.format(column))
         plt.xlabel('cosine similarity')
         plt.ylabel('Density')
-        plt.show()
         plt.savefig(path)
+        plt.show()
 
 path = "/Users/harsharenkila/PycharmProjects/ANLP/project/embeddings/Xlmr_Bert_{}_data.csv"
 kk = MultilingualAnalysis(path)

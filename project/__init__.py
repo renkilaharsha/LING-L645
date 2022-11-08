@@ -1,5 +1,11 @@
 #https://www.bls.gov/oes/current/oes_stru.htm
 
+from re import sub
+
+def camel_case(s):
+  s = sub(r"(_|-)+", " ", s).title().replace(" ", "")
+  return ''.join([s[0].upper(), s[1:]])
+
 domain  = {11: "Management Occupations",
 13 :  "Business and Financial Operations Occupations",
 15  :"Computer and Mathematical Occupations",
