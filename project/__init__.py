@@ -1,3 +1,5 @@
+#https://www.bls.gov/oes/current/oes_stru.htm
+
 domain  = {11: "Management Occupations",
 13 :  "Business and Financial Operations Occupations",
 15  :"Computer and Mathematical Occupations",
