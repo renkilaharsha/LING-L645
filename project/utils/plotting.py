@@ -81,4 +81,12 @@ def visualize_word_vectors(model_name,column,index):
     fig.show()
 
 
-
+def plot_bar_graph(langs,cluster_values,model_name,column):
+    fig = plt.figure()
+    plt.bar(langs, cluster_values,color ='maroon',
+        width = 0.4)
+    plt.xlabel("Langauage pairs")
+    plt.ylabel("No. of data points have same cluster")
+    plt.title("{} {} Multi cluster analysis".format(model_name,column))
+    plt.savefig("/Users/harsharenkila/PycharmProjects/ANLP/project/output/cluster_plots/{}_{}_cluster_plot.png".format(model_name,column))
+    #plt.show()

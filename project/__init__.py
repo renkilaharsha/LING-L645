@@ -2,6 +2,11 @@
 
 from re import sub
 
+langauges = ["english", "french", "spanish","dutch", "german"]
+
+language_code ={"english":"en", "french":"fr", "spanish":"es","dutch":"nl", "german":"de"}
+models  = ["Xlmr_Bert","MUSE","Multi_Bert"]
+
 def camel_case(s):
   s = sub(r"(_|-)+", " ", s).title().replace(" ", "")
   return ''.join([s[0].upper(), s[1:]])
