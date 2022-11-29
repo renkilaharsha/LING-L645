@@ -18,8 +18,14 @@ def plot_training_val_curves(history,model_name):
     plt.show()
 
 
+def get_sample_index():
+    df = pd.read_csv("/Users/harsharenkila/PycharmProjects/ANLP/project/embeddings/FastText_dutch_data.csv")
+    index = df.sample(5, replace=False).index
+    del df
+    return index
 #https://medium.com/analytics-vidhya/word-embedding-using-python-63770334841
 def visualize_word_vectors(model_name,column,index):
+
     eng_txt,eng_embedding = get_visualize_data(model=model_name,language="english",column=column)
     spa_txt,spa_embedding = get_visualize_data(model=model_name,language="spanish",column=column)
     ger_txt,ger_embedding = get_visualize_data(model=model_name,language="german",column=column)
@@ -81,12 +87,16 @@ def visualize_word_vectors(model_name,column,index):
     fig.show()
 
 
-def plot_bar_graph(langs,cluster_values,model_name,column):
+def plot_bar_graph(langs,cluster_values,model_name,column,clustering_model):
     fig = plt.figure()
     plt.bar(langs, cluster_values,color ='maroon',
         width = 0.4)
     plt.xlabel("Langauage pairs")
     plt.ylabel("No. of data points have same cluster")
     plt.title("{} {} Multi cluster analysis".format(model_name,column))
-    plt.savefig("/Users/harsharenkila/PycharmProjects/ANLP/project/output/cluster_plots/{}_{}_cluster_plot.png".format(model_name,column))
+    if clustering_model == None:
+        clustering_model = "GMM"
+    else:
+        clustering_model = "K_Means"
+    plt.savefig("/Users/harsharenkila/PycharmProjects/ANLP/project/output/cluster_plots/{}_{}_{}_cluster_plot.png".format(model_name,column,clustering_model))
     #plt.show()

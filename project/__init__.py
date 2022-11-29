@@ -5,7 +5,7 @@ from re import sub
 langauges = ["english", "french", "spanish","dutch", "german"]
 
 language_code ={"english":"en", "french":"fr", "spanish":"es","dutch":"nl", "german":"de"}
-models  = ["Xlmr_Bert","MUSE","Multi_Bert"]
+models  = ["Xlmr_Bert","M_USE","Multi_Bert","MDistill"]
 
 def camel_case(s):
   s = sub(r"(_|-)+", " ", s).title().replace(" ", "")
