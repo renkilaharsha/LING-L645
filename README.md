@@ -111,17 +111,93 @@ Because Chinese (and Japanese Kanji and Korean Hanja) does not have whitespace c
 For all other languages, apply the same recipe as English: (a) lower casing+accent removal, (b) punctuation splitting, (c) whitespace tokenization. We understand that accent markers have substantial meaning in some languages, but felt that the benefits of reducing the effective vocabulary make up for this.
 
 Multilingual Bert will support 108 languages trained from MNLI dataset, wikipedia, language translation data etc.. 
-**MBert model consists of 12-layer, 768-hidden, 12-heads, 110M parameters**
+**MBert model consists of 12-layer, 768-hidden, 12-heads, 177M parameters**
 
-### Distill Multilingual Bert
+### Distill Multilingual BERT
 
+  Distill Multilingual model is similar to the Bert model with fewer layers and trained as the supervised model. The model has 6 layers, 768 dimension and 12 heads, totalizing 134M parameters (compared to 177M parameters for mBERT-base)
+
+### Multilingual Universal Sentence Encoder 
+  
+  Multilingual Universal sentence Encoder comes up with the two models as follows: 
+
+#### Transformer model
+  The transformer based sentence encoding model
+constructs sentence embeddings using the encoding sub-graph of the transformer architecture
+(Vaswani et al., 2017). This sub-graph uses attention to compute context aware representations
+of words in a sentence that take into account both
+the ordering and identity of all the other words.
+The context aware word representations are converted to a fixed length sentence encoding vector
+by computing the element-wise sum of the representations at each word position.3 The encoder
+takes as input a lowercased PTB tokenized string
+and outputs a 512 dimensional vector as the sentence embedding.
+#### Deep Averaging Network (DAN)
+Deep averaging network (DAN) (Iyyer et al.,2015) whereby input embeddings for words and
+bi-grams are first averaged together and then
+passed through a feedforward deep neural network
+(DNN) to produce sentence embeddings. Similar to the Transformer encoder, the DAN encoder
+takes as input a lowercased PTB tokenized string
+and outputs a 512 dimensional sentence embedding.
+
+The output of Transformer and DAN model is taken as embeddings which can be used as word embeddings for next subsequent tasks. It only supports 15 languages as of now.
+
+### XLMR BERT
+Sentence-BERT(SBERT), a modification of the BERT network using siamese and triplet networks that is able to
+derive semantically meaningful sentence embeddings. However, the limitation of SBERT is that it only supports English at the moment while leave blank for other languages. To solve that, we can use the model architecture similar with Siamese and Triplet network structures to extend SBERT to new language.
+
+The idea is simple, first we produces sentence embeddings in English sentence by SBERT, call it as Teacher model. Then create new model for our desired language, we call Student model, and this model tries to mimic the Teacher model. In other word, the original English sentence will be trained in Student model in order to get the vector same as one in Teacher model.
+
+As the example below, both “Hello World” and “Hallo Welt” were put through Student model, and the model tries to generate two vectors that are similar with the one from Teacher model. After training, the Student model are expected to have ability for encoding the sentence in both language English and the desired language.
+
+<p align="center"> 
+  <img width="700" src="project/referrences/sbert model.png">
+</p>
+
+For XLMR BERT model student model is Xlmr-Roberta model and Bert model as Teacher Model. The language pair data is feeded to this network. It can support 108 languages.
+
+
+### FastText
+
+Write the content
+
+## Experiments
+
+  The Goal of this project  is to evaluate the performance/similarity of multilingual embedding models on job zone data(Onet Occupation-job zone)
+
+### Visualizing the embeddings in Lower Dimensional Space
+   Assuming that  multilingual language models will have semantically equivalent words/sentences of all the languages will be closer in the higher dimensional space. So to check this we are getting the embeddings for description and title from all the languages and visualizing in the 2-d space.
+  
+   Below is the directory where you can find the plots.
+
+     --- Project
+        |--- output
+              |--- word_visualization_plots
+                      |--- M_USE_words_viz.png
+                      |--- *
+
+  <p align="center"> 
+  <img width="700" src="project/output/word_visualization_plots/Multi_Bert_words_viz.png">
+</p>
+
+  
+  
+    The above chart is for Multilingual bert low dimensional representation. When we see into the chart the same titles in  different languages are not close enough.
+
+After observing all the plots for some title the points for all languages are very near but most of them are scattered.
+
+    The Usage of visualizing projects
+
+    from project.utils.plotting import visualize_word_vectors, get_sample_index
 
 ## Referrences
 *   Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). Attention Is All You Need. arXiv. https://doi.org/10.48550/arXiv.1706.03762
+*   Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks. arXiv. https://doi.org/10.48550/arXiv.1908.10084.
+*   Cer, D., Yang, Y., Kong, S., Hua, N., Limtiaco, N., John, R. S., Constant, N., Yuan, S., Tar, C., Sung, Y., Strope, B., & Kurzweil, R. (2018). Universal Sentence Encoder. arXiv. https://doi.org/10.48550/arXiv.1803.11175
+*   Yang, Y., Cer, D., Ahmad, A., Guo, M., Law, J., Constant, N., Abrego, G. H., Yuan, S., Tar, C., Sung, Y., Strope, B., & Kurzweil, R. (2019). Multilingual Universal Sentence Encoder for Semantic Retrieval. arXiv. https://doi.org/10.48550/arXiv.1907.04307
+*   Sanh, V., Debut, L., Chaumond, J., & Wolf, T. (2019). DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter. arXiv. https://doi.org/10.48550/arXiv.1910.01108
 *   Pires, Telmo and Schlinger, Eva and Garrette, Dan. [How multilingual is Multilingual BERT?](https://arxiv.org/abs/1906.01502)
 *   [Multilingual Bert Details](https://github.com/google-research/bert/blob/master/multilingual.md)
-*   Jaderberg, M., Simonyan, K. and Zisserman, A., 2015. Spatial transformer networks. In Advances in neural information processing systems (pp. 2017-2025).
-*   Spatial Transformer Networks by Kushagra Bhatnagar. https://link.medium.com/0b2OrmqVO5
+*   [Sbert multilingual training](https://towardsdatascience.com/a-complete-guide-to-transfer-learning-from-english-to-other-languages-using-sentence-embeddings-8c427f8804a9)
 *   [visualizing word Embeddings in lower dimension](https://medium.com/analytics-vidhya/word-embedding-using-python-63770334841)
 *   [TensorFlow implementation training neural networks](https://www.tensorflow.org/guide/keras/train_and_evaluate)
 *   [About O*net Ocuupation Data](https://www.onetcenter.org/taxonomy.html#latest)
