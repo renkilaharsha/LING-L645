@@ -40,11 +40,11 @@ The Occupation data is having the occupation title and duties description of the
 
 Structure and Description of data as follows:
 
- | Column         | Type	| Column Content |
- |----------------|---------|--------------|
- | O*NET-SOC Code |	Character(10) | O*NET-SOC Code |
-| Title	         |Character Varying(150)	|O*NET-SOC Title|
-| Description    |Character Varying(1000)|O*NET-SOC Description|
+ |     Column     |          Type           |    Column Content     |
+|:--------------:|:-----------------------:|:---------------------:|
+ | O*NET-SOC Code |     	Character(10)      |    O*NET-SOC Code     |
+|     Title	     | Character Varying(150)	 |    O*NET-SOC Title    |
+|  Description   | Character Varying(1000) | O*NET-SOC Description |
 
 Entire Occupations are categorised into 23 major groups called Domains
 - Domains are as follows:
@@ -179,15 +179,68 @@ Write the content
   <img width="700" src="project/output/word_visualization_plots/Multi_Bert_words_viz.png">
 </p>
 
-  
-  
     The above chart is for Multilingual bert low dimensional representation. When we see into the chart the same titles in  different languages are not close enough.
 
 After observing all the plots for some title the points for all languages are very near but most of them are scattered.
 
-    The Usage of visualizing projects
+    The Usage of visualizing words
 
     from project.utils.plotting import visualize_word_vectors, get_sample_index
+    index =  get_sample_index()
+    visualize_word_vectors("Multi_Bert","title",index)
+
+### Cosine Similarity analysis
+
+  This analysis to see how the different languages are in par with english language embeddings. For this we have taken the english language embeddings of title, description, domain and other language embeddings and performed cosine similarity for each language pair and plotted the distribution for each model.
+
+    The usage of cosine sim analysis:
+    from project.src.multilingual_analysis import MultilingualAnalysis
+
+    path = "/Users/harsharenkila/PycharmProjects/ANLP/project/embeddings/M_USE_{}_data.csv"
+    kk = MultilingualAnalysis(path)
+    kk.vectorspace_analysis("english","title")
+    kk.vectorspace_analysis("english","description")
+    kk.vectorspace_analysis("english","domain")
+    
+Below is the directory where you can find the analysisplots.
+
+     --- Project
+        |--- output
+              |--- cosine_sim_analysis
+                      |--- M_USE_description.png
+                      |--- *
+
+ ##### Title Cosine-similarity  Plots
+
+|                                                                                                |                                                                                                      |
+|:----------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------:|
+|    <img width="1604" alt="" src="project/output/cosine_sim_analysis/M_USE_title.png"> M-USE    | <img width="1604" alt="" src="project/output/cosine_sim_analysis/MDistill_title.png"> M-DISTILL BERT |                           
+| <img width="1604" alt="" src="project/output/cosine_sim_analysis/Multi_Bert_title.png"> M-BERT |   <img width="1604" alt="" src="project/output/cosine_sim_analysis/Xlmr_Bert_title.png"> XLMR-BERT   |                           
+
+ ##### Domain Cosine-similarity  Plots
+
+|                                                                                                 |                                                                                                       |
+|:-----------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------:|
+|    <img width="1604" alt="" src="project/output/cosine_sim_analysis/M_USE_domain.png"> M-USE    | <img width="1604" alt="" src="project/output/cosine_sim_analysis/MDistill_domain.png"> M-DISTILL BERT |                           
+| <img width="1604" alt="" src="project/output/cosine_sim_analysis/Multi_Bert_domain.png"> M-BERT |   <img width="1604" alt="" src="project/output/cosine_sim_analysis/Xlmr_Bert_domain.png"> XLMR-BERT   |                           
+
+ ##### Description Cosine-similarity  Plots
+
+|                                                                                                      |                                                                                                            |
+|:----------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|
+|    <img width="1604" alt="" src="project/output/cosine_sim_analysis/M_USE_description.png"> M-USE    | <img width="1604" alt="" src="project/output/cosine_sim_analysis/MDistill_description.png"> M-DISTILL BERT |                           
+| <img width="1604" alt="" src="project/output/cosine_sim_analysis/Multi_Bert_description.png"> M-BERT |   <img width="1604" alt="" src="project/output/cosine_sim_analysis/Xlmr_Bert_description.png"> XLMR-BERT   |                           
+
+
+### Multi cluster distribution Analysis
+|                                                                                                      |                                                                                                            |
+|:----------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|
+|    <img width="1604" alt="" src="project/output/cluster_plots/M_USE_Description_GMM_cluster_plot.png"> M-USE    | <img width="1604" alt="" src="project/output/cluster_plots/MDistill_Description_GMM_cluster_plot.png"> M-DISTILL BERT |                           
+| <img width="1604" alt="" src="project/output/cluster_plots/Multi_Bert_Title_GMM_cluster_plot.png"> M-BERT |   <img width="1604" alt="" src="project/output/cluster_plots/Xlmr_Bert_Title_GMM_cluster_plot.png"> XLMR-BERT   |                           
+
+### Job Zone classification
+
+## Conclusion and Future work
 
 ## Referrences
 *   Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). Attention Is All You Need. arXiv. https://doi.org/10.48550/arXiv.1706.03762
