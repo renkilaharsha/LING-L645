@@ -6,7 +6,7 @@
 Representation of Text in the N-Dimensional space is key for many NlP tasks such as NER, Sentiment analysis, Classisication, Language Modelling, etc.. has gain vital importance in the recent days. These representation of text as embeddings which captures the semantic meaning of the text. Most of the embeddings are training on the english corpus and showed capability of achieving NLP tasks.  When it comes to other languages there are different models for each language which can do the tasks. But, in realtime if a product support multiple languages let say 100, deploying 100 different language models for all languages will not highly resource taking and highly expensive. Due to that there are some Multilingual language models like Multilingual Bert, Multilingual Distill Bert, Multilingual Universal Sentence Encoders, Multilingual XLMR Bert, etc.. are supporting the more than 100 different languages with single model. These word embedding models are trained and evaluated with text with general context like wikipedia, books, etc..  using cosine-similarity. When it comes to domain-specific data, we want to evaluate the model without pre-training, how it performs across different languages on the same task.
 
 ## Languages Considered for Experiment
-    - English (language Code - En)
+    - English (language Code - EN)
     - Spanish (language Code - ES)
     - German (language Code - DE)
     - French (language Code - FR)
@@ -83,7 +83,16 @@ Preprocessed data and code can be found in the directory:
 
 Due to imbalance in Job Zone data the data is up sampled and the counts for each class is as follows:
 
-____ To Do ___ get  counts of job zone
+ 
+  | Job Zone | Counts |
+|:--------:|:------:|
+  |    2     |  289   |
+  |    4     |  224   |
+  |    3     |  220   |
+  |    5     |  158   |
+  |    1     |   32   |
+
+The data imbalancing code implementation can be found in below path: 
 
     --- Project
         |--- src
@@ -131,6 +140,7 @@ The context aware word representations are converted to a fixed length sentence 
 by computing the element-wise sum of the representations at each word position.3 The encoder
 takes as input a lowercased PTB tokenized string
 and outputs a 512 dimensional vector as the sentence embedding.
+
 #### Deep Averaging Network (DAN)
 Deep averaging network (DAN) (Iyyer et al.,2015) whereby input embeddings for words and
 bi-grams are first averaged together and then
@@ -202,7 +212,7 @@ After observing all the plots for some title the points for all languages are ve
     kk.vectorspace_analysis("english","description")
     kk.vectorspace_analysis("english","domain")
     
-Below is the directory where you can find the analysisplots.
+Below is the directory where you can find the analysis plots.
 
      --- Project
         |--- output
@@ -217,12 +227,17 @@ Below is the directory where you can find the analysisplots.
 |    <img width="1604" alt="" src="project/output/cosine_sim_analysis/M_USE_title.png"> M-USE    | <img width="1604" alt="" src="project/output/cosine_sim_analysis/MDistill_title.png"> M-DISTILL BERT |                           
 | <img width="1604" alt="" src="project/output/cosine_sim_analysis/Multi_Bert_title.png"> M-BERT |   <img width="1604" alt="" src="project/output/cosine_sim_analysis/Xlmr_Bert_title.png"> XLMR-BERT   |                           
 
+When we look into the plot of ***XLMR-BERT*** the mean of the plot is near to 0.9 for all languages means the semantic meaning of the same title in the different languages are very near. But, in contrast Multi-lingual Bert is mean of all languages is around 0.5 which means the same vectors of same title is not close enough in all the languages. Multi-lingual universal encoder and Multi distill bert's mean is around 0.8 which is better than M bert model.  
+
+
  ##### Domain Cosine-similarity  Plots
 
 |                                                                                                 |                                                                                                       |
 |:-----------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------:|
 |    <img width="1604" alt="" src="project/output/cosine_sim_analysis/M_USE_domain.png"> M-USE    | <img width="1604" alt="" src="project/output/cosine_sim_analysis/MDistill_domain.png"> M-DISTILL BERT |                           
 | <img width="1604" alt="" src="project/output/cosine_sim_analysis/Multi_Bert_domain.png"> M-BERT |   <img width="1604" alt="" src="project/output/cosine_sim_analysis/Xlmr_Bert_domain.png"> XLMR-BERT   |                           
+
+Unlike from the title cosine similarity the distribution is not uniform for all the models and languages. Since the domain name is unique and will not be in any corpus this behaviour of non-uniformness is expected. Even in this Xlrm-Bert is better when compared with other models.
 
  ##### Description Cosine-similarity  Plots
 
@@ -231,12 +246,26 @@ Below is the directory where you can find the analysisplots.
 |    <img width="1604" alt="" src="project/output/cosine_sim_analysis/M_USE_description.png"> M-USE    | <img width="1604" alt="" src="project/output/cosine_sim_analysis/MDistill_description.png"> M-DISTILL BERT |                           
 | <img width="1604" alt="" src="project/output/cosine_sim_analysis/Multi_Bert_description.png"> M-BERT |   <img width="1604" alt="" src="project/output/cosine_sim_analysis/Xlmr_Bert_description.png"> XLMR-BERT   |                           
 
+Description is the text where the duties of particular occupation is described. the title and domain having a word or couple which will have less semantic meaning. So, description will give an correct estimate of which embedding will encode better semantic meaning. After observing plots the Xlmr-Bert model out performs all the other models. M-Bert is not capturing the language relation when comapred to all.
 
 ### Multi cluster distribution Analysis
-|                                                                                                      |                                                                                                            |
-|:----------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|
+In this analysis decompose the problem into two simpler subproblems: E = Eembed ◦ Ecluster, where Ecluster : L × V →C deterministically maps words to multilingual clusters C, and E_embed : C → R assigns a vector to each cluster.We use a bilin- gual dictionary to find clusters of translationally equivalent words, then use distributional similari- ties of the clusters in monolingual corpora from all languages in L to estimate an embedding for each cluster.
+
+The Below plots are the Multi-cluster Distributional analysis for the ***Description*** using Gaussian Mixture Model clustering: 
+
+|                                                                                                                 |                                                                                                                       |
+|:---------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------:|
 |    <img width="1604" alt="" src="project/output/cluster_plots/M_USE_Description_GMM_cluster_plot.png"> M-USE    | <img width="1604" alt="" src="project/output/cluster_plots/MDistill_Description_GMM_cluster_plot.png"> M-DISTILL BERT |                           
+| <img width="1604" alt="" src="project/output/cluster_plots/Multi_Bert_Description_GMM_cluster_plot.png"> M-BERT |   <img width="1604" alt="" src="project/output/cluster_plots/Xlmr_Bert_Description_GMM_cluster_plot.png"> XLMR-BERT   |                           
+
+The Below plots are the Multi-cluster Distributional analysis for the ***Title*** using Gaussian Mixture Model clustering: 
+
+|                                                                                                           |                                                                                                                 |
+|:---------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------:|
+|    <img width="1604" alt="" src="project/output/cluster_plots/M_USE_Title_GMM_cluster_plot.png"> M-USE    | <img width="1604" alt="" src="project/output/cluster_plots/MDistill_Title_GMM_cluster_plot.png"> M-DISTILL BERT |                           
 | <img width="1604" alt="" src="project/output/cluster_plots/Multi_Bert_Title_GMM_cluster_plot.png"> M-BERT |   <img width="1604" alt="" src="project/output/cluster_plots/Xlmr_Bert_Title_GMM_cluster_plot.png"> XLMR-BERT   |                           
+
+
 
 ### Job Zone classification
 
