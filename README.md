@@ -266,7 +266,40 @@ The Below plots are the Multi-cluster Distributional analysis for the ***Title**
 | <img width="1604" alt="" src="project/output/cluster_plots/Multi_Bert_Title_GMM_cluster_plot.png"> M-BERT |   <img width="1604" alt="" src="project/output/cluster_plots/Xlmr_Bert_Title_GMM_cluster_plot.png"> XLMR-BERT   |                           
 
 
+Below is the directory where you can find the analysis plots.
 
+     --- Project
+        |--- output
+              |--- cosine_sim_analysis
+                      |--- M_USE_Description_GMM_cluster_plot.png
+                      |--- *
+
+
+
+The usage of cluster analysis:
+
+    from project.uitls.plotting import *
+    from project import *
+
+    for model in models:
+    title = []
+    description =[]
+    for lang in langauges:
+        output = get_data_from_file(model=model,language=lang)
+        try:
+            if(output == False):
+                print("error")
+            t,des,do,job_zone = output
+        except:
+            t,des,do,job_zone = output
+        title.append(t)
+        description.append(des)
+
+    cluster_distributional_analysis(title,10,model,"Title","spectral")
+    cluster_distributional_analysis(description,10,model,"Description","spectral")
+
+    cluster_distributional_analysis(title,10,model,"Title")
+    cluster_distributional_analysis(description,10,model,"Description")
 ### Job Zone classification
 
 ## Conclusion and Future work
