@@ -440,7 +440,7 @@ A) Below table results are model's built using title, description and domain as 
 |  Model Name   | Train Accuracy | Validation Accuracy | English Test Accuracy | Spanish Test Accuracy | German Test Accuracy | French Test Accuracy | Dutch Test Accuracy | Total Test Accuracy |
 |:-------------:|:--------------:|:-------------------:|:---------------------:|:---------------------:|:--------------------:|:--------------------:|:-------------------:|:-------------------:|
   |     Mbert     |      0.96      |        0.48         |          0.9          |          0.7          |         0.55         |         0.85         |        0.55         |        0.71         |
-  | Distill Mbert |     0.965      |        0.88         |         0.85          |         0.85          |         0.95         |         0.85         |        0.90         |        0.86         |
+  | Distill Mbert |      0.93      |        0.82         |         0.80          |         0.80          |         0.90         |         0.80         |        0.90         |        0.81         |
   |   Xlmr Bert   |      0.97      |        0.89         |         0.95          |         0.95          |         0.85         |         0.80         |        0.90         |        0.89         |
   |     MUSE      |      158       |
   |   Fasttext    |       32       | 
