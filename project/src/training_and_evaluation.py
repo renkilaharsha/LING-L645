@@ -18,4 +18,4 @@ def train(model_name,model,title,description,domain,job_zone,epochs,learning_rat
             validation_split=0.15
         )
     model.save_weights('project/models/model_{}.h5'.format(model_name), overwrite=True)
-    plot_training_val_curves(history,"Multi_Bert_domain")
+    plot_training_val_curves(history,model_name)

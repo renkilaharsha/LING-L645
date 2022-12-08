@@ -11,6 +11,12 @@ Representation of Text in the N-Dimensional space is key for many NlP tasks such
     - German (language Code - DE)
     - French (language Code - FR)
     - Dutch (language Code - NL)
+
+
+Required packages to install:
+
+    pip3 install tensorflow keras matplotlib faststext tensorflow-text sklearn pandas numpy sentence-transformers
+
 ## Dataset
 ### O*net
 The ONET Program is the nation's primary source of occupational information. Valid data are essential to understanding the rapidly changing nature of work and how it impacts the workforce and U.S. economy. From this information, applications are developed to facilitate the development and maintenance of a skilled workforce.
@@ -122,9 +128,24 @@ For all other languages, apply the same recipe as English: (a) lower casing+acce
 Multilingual Bert will support 108 languages trained from MNLI dataset, wikipedia, language translation data etc.. 
 **MBert model consists of 12-layer, 768-hidden, 12-heads, 177M parameters**
 
+    Loading the MBert vectors:
+
+    from project.src.load_embeddings import Vectors
+
+    model = Vectors("distiluse-base-multilingual-cased-v1",[" Text to get vectors as list"])
+    model.load_sentence_transformer_model()
+    embeddings = model.encode_text()
 ### Distill Multilingual BERT
 
   Distill Multilingual model is similar to the Bert model with fewer layers and trained as the supervised model. The model has 6 layers, 768 dimension and 12 heads, totalizing 134M parameters (compared to 177M parameters for mBERT-base)
+
+    Loading the Distill M bert vectors:
+
+    from project.src.load_embeddings import Vectors
+
+    model = Vectors("distiluse-base-multilingual-cased-v1",[" Text to get vectors as list"])
+    model.load_sentence_transformer_model()
+    embeddings = model.encode_text()
 
 ### Multilingual Universal Sentence Encoder 
   
@@ -151,6 +172,14 @@ and outputs a 512 dimensional sentence embedding.
 
 The output of Transformer and DAN model is taken as embeddings which can be used as word embeddings for next subsequent tasks. It only supports 15 languages as of now.
 
+    Loading the MUSE vectors:
+
+    import tensorflow_hub as hub
+
+    english_sentences = ["dog", "Puppies are nice.", "I enjoy taking long walks along the beach with my dog."]
+    en_result = embed(english_sentences)
+    print(en_result)
+
 ### XLMR BERT
 Sentence-BERT(SBERT), a modification of the BERT network using siamese and triplet networks that is able to
 derive semantically meaningful sentence embeddings. However, the limitation of SBERT is that it only supports English at the moment while leave blank for other languages. To solve that, we can use the model architecture similar with Siamese and Triplet network structures to extend SBERT to new language.
@@ -165,6 +194,13 @@ As the example below, both “Hello World” and “Hallo Welt” were put throu
 
 For XLMR BERT model student model is Xlmr-Roberta model and Bert model as Teacher Model. The language pair data is feeded to this network. It can support 108 languages.
 
+    Loading the Xlmr-Bert vectors:
+
+    from project.src.load_embeddings import Vectors
+
+    model = Vectors("distiluse-base-multilingual-cased-v1",[" Text to get vectors as list"])
+    model.load_sentence_transformer_model()
+    embeddings = model.encode_text()
 
 ### FastText
 
@@ -301,6 +337,123 @@ The usage of cluster analysis:
     cluster_distributional_analysis(title,10,model,"Title")
     cluster_distributional_analysis(description,10,model,"Description")
 ### Job Zone classification
+  For the further analysis we have chosen job zone classification as a task. In this task, we try to develop simple MLP models which will be trained on the all the language data and compute the accuracy across all the languages.
+
+We have three features to train on:
+  
+  - Title of the occupation
+  - Description duties of occupation
+  - Domain of the occupation
+
+Below is one of the model architecture:
+<p align="center"> 
+  <img width="700" src="project/output/model_plots/Xlrm_Bert_model_plot.png" > Xlmr-Bert model
+</p>
+
+Below is the directory where you can find the Architecture defining , model architecture plots and Loss plots.
+
+     --- Project
+        |--- output
+              |--- model_plots
+                      |--- Xlrm_Bert_model_plot.png  # Model architecture plots
+                      |--- *
+
+        |--- output
+              |--- loss_plots
+                      |--- Xlrm_Bert_loss_plot.png  # Training loss plots
+                      |--- *
+        
+        |---  src
+              |--- model_building.py  # Model Architecture
+
+Usage for training the models:
+
+    from project.src.model_building import Model_Building
+    from project.src.training_and_evaluation import train
+    
+    models = Model_Building()
+    usemodel = models.MBERTmodelDomain()
+    titles =[]
+    descriptions = []
+    domains =[]
+    job_zones =[]
+    test_df ={}
+
+
+    for lang in langauges:
+        output = get_data_from_file(model="Multi_Bert",language=lang)
+        try:
+            if(output == False):
+                print("error")
+            title,description,domain,job_zone,test = output
+        except:
+            title,description,domain,job_zone,test  = output
+
+        titles.append(title)
+        descriptions.append(description)
+        domains.append(domain)
+        job_zones.extend(job_zone)
+        test_df[lang]=test
+
+
+    t = np.vstack(titles)
+    des =  np.vstack(descriptions)
+    do = np.vstack(domains)
+    job_zones = [x - 1 for x in job_zones]
+
+    d = {x:job_zones.count(x) for x in job_zones}
+    Y = to_categorical(job_zones,num_classes=5)
+
+
+    train("XlmrBert_english",usemodel,t,des,do,Y,100,1e-3)
+
+    # Tesing the outputs of model 
+    for lang in test_df:
+        print(lang)
+        output = get_data_from_df(test_df[lang],language=lang)
+        try:
+            if (output == False):
+                print("error")
+            title, description, domain, job_zone = output
+        except:
+            title, description, domain, job_zone = output
+        job_zone = [x - 1 for x in job_zone]
+
+    d = {x: job_zone.count(x) for x in job_zone}
+    Y = to_categorical(job_zone, num_classes=5)
+    score = usemodel.evaluate([title,description,domain],Y)
+    print('Test loss:', score[0])
+    print('Test accuracy:', score[1])
+
+    pred = usemodel.predict([title,description,domain])
+    pred = np.argmax(pred, axis=1)
+    label = np.argmax(Y, axis=1)
+
+    print(pred)
+    print(label) 
+
+
+#### Results
+
+A) Below table results are model's built using title, description and domain as features.
+
+|  Model Name   | Train Accuracy | Validation Accuracy | English Test Accuracy | Spanish Test Accuracy | German Test Accuracy | French Test Accuracy | Dutch Test Accuracy | Total Test Accuracy |
+|:-------------:|:--------------:|:-------------------:|:---------------------:|:---------------------:|:--------------------:|:--------------------:|:-------------------:|:-------------------:|
+  |     Mbert     |      0.96      |        0.48         |          0.9          |          0.7          |         0.55         |         0.85         |        0.55         |        0.71         |
+  | Distill Mbert |     0.965      |        0.88         |         0.85          |         0.85          |         0.95         |         0.85         |        0.90         |        0.86         |
+  |   Xlmr Bert   |      0.97      |        0.89         |         0.95          |         0.95          |         0.85         |         0.80         |        0.90         |        0.89         |
+  |     MUSE      |      158       |
+  |   Fasttext    |       32       | 
+
+B) Below table results are model's built using only tile and description as features.
+
+|  Model Name   | Train Accuracy | Validation Accuracy | English Test Accuracy | Spanish Test Accuracy | German Test Accuracy | French Test Accuracy | Dutch Test Accuracy | Total Test Accuracy |
+|:-------------:|:--------------:|:-------------------:|:---------------------:|:---------------------:|:--------------------:|:--------------------:|:-------------------:|:-------------------:|
+  |     Mbert     |      289       | 
+  | Distill Mbert |      224       |
+  |   Xlmr Bert   |      220       |
+  |     MUSE      |      158       |
+  |   Fasttext    |       32       | 
 
 ## Conclusion and Future work
 

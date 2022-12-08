@@ -63,7 +63,7 @@ print(en_result)'''
 #print(model.encode_text())
 print("----------------Model Architecture defining---------------- ")
 models = Model_Building()
-usemodel = models.MBERTmodelDomain()
+model = models.DistillMBERTmodelDomain()
 titles =[]
 descriptions = []
 domains =[]
@@ -72,7 +72,7 @@ test_df ={}
 
 
 for lang in langauges:
-    output = get_data_from_file(model="Multi_Bert",language=lang)
+    output = get_data_from_file(model="MDistill",language=lang)
     try:
         if(output == False):
             print("error")
@@ -102,7 +102,7 @@ Y = to_categorical(job_zones,num_classes=5)
 print(Y.shape)
 print(Y)
 
-train("XlmrBert_english",usemodel,t,des,do,Y,100,1e-3)
+train("MDistill_Domain",model,t,des,do,Y,50,1e-2)
 for lang in test_df:
     print(lang)
     output = get_data_from_df(test_df[lang],language=lang)
@@ -117,11 +117,11 @@ for lang in test_df:
     d = {x: job_zone.count(x) for x in job_zone}
     print(d)
     Y = to_categorical(job_zone, num_classes=5)
-    score = usemodel.evaluate([title,description,domain],Y)
+    score = model.evaluate([title,description],Y)
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
 
-    pred = usemodel.predict([title,description,domain])
+    pred = model.predict([title,description])
     pred = np.argmax(pred, axis=1)
     label = np.argmax(Y, axis=1)
 
