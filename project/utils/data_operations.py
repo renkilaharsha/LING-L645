@@ -16,8 +16,8 @@ def get_visualize_data(path:str="/Users/harsharenkila/PycharmProjects/ANLP/proje
 
 def get_data_from_df(df,language):
     title_embedding_list = extract_embeddings(df["{}_title_embeddings".format(language)])
-    description_embedding_list = extract_embeddings(df["{}_title_embeddings".format(language)])
-    domain_embedding_list = extract_embeddings(df["{}_title_embeddings".format(language)])
+    description_embedding_list = extract_embeddings(df["{}_description_embeddings".format(language)])
+    domain_embedding_list = extract_embeddings(df["{}_domain_embeddings".format(language)])
     job_zone = df["Job Zone"].tolist()
     if (len(title_embedding_list) == len(df) and len(description_embedding_list) == len(df) and len(
             domain_embedding_list) == len(df) and len(job_zone) == len(df)):
@@ -35,13 +35,15 @@ def get_data_from_file(path:str = "/Users/harsharenkila/PycharmProjects/ANLP/pro
     else:
 
         df = pd.read_csv(path+"{}_{}_data.csv".format(model,language),index_col=None)
+        print(len(df))
         test = df.sample(n=20)
         df.drop(test.index, inplace=True)
 
     title_embedding_list = extract_embeddings(df["{}_title_embeddings".format(language)])
-    description_embedding_list = extract_embeddings(df["{}_title_embeddings".format(language)])
-    domain_embedding_list = extract_embeddings(df["{}_title_embeddings".format(language)])
+    description_embedding_list = extract_embeddings(df["{}_description_embeddings".format(language)])
+    domain_embedding_list = extract_embeddings(df["{}_domain_embeddings".format(language)])
     job_zone = df["Job Zone"].tolist()
+
     if(len(title_embedding_list)== len(df) and len(description_embedding_list)== len(df) and len(domain_embedding_list)== len(df) and len(job_zone)== len(df)):
         title_embedding = np.array(title_embedding_list,np.float32)
         description_embedding = np.array(description_embedding_list,np.float32)

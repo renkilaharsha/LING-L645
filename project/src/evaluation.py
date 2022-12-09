@@ -35,7 +35,7 @@ def multi_cluster_analysis(embeddings_list,no_of_clusters,model:str=None):
                 if(len(final_dict)>0):
                     #print("in else")
                     #final_dict[j] = {}
-                    final_dict[j][lang_dict[i]]= predict[j]
+                    final_dict[j][lang_dict[i]] = predict[j]
                 else:
                     final_dict[j][lang_dict[i]] = predict[j]
                 #print(j,lang_dict[i],predict[j])

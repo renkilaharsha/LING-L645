@@ -13,45 +13,48 @@ from project.utils.plotting import visualize_word_vectors, get_sample_index
 
 print("-------Data preprocessing stated------")
 
-#data_preprocessing.preprocess_data("project/data/Occupation Data.xlsx","project/data/Job Zones.xlsx")
+data_preprocessing.preprocess_data("project/data/Occupation Data.xlsx","project/data/Job Zones.xlsx")
 
 print("----- New file created after preprocessing --------" )
 
 
 print("Visualize word embeddings in 2-D space")
-'''index =  get_sample_index()
+index =  get_sample_index()
 visualize_word_vectors("Multi_Bert","title",index)
 visualize_word_vectors("Xlmr_Bert","title",index)
 visualize_word_vectors("M_USE","title",index)
-visualize_word_vectors("MDistill","title",index)'''
-#visualize_word_vectors("Multi_Bert","description",index)
-#visualize_word_vectors("Xlmr_Bert","description",index)
-#visualize_word_vectors("M_USE","description",index)
-#visualize_word_vectors("MDistill","description",index)
-
+visualize_word_vectors("MDistill","title",index)
+visualize_word_vectors("Multi_Bert","description",index)
+visualize_word_vectors("Xlmr_Bert","description",index)
+visualize_word_vectors("M_USE","description",index)
+visualize_word_vectors("MDistill","description",index)
 
 print("-------Started Multi cluster analysis of Embeddings----------")
 #### Multi cluster distribution Analysis
 
-'''for model in models:
+for model in models:
     title = []
     description =[]
     for lang in langauges:
+        print(lang)
         output = get_data_from_file(model=model,language=lang)
         try:
             if(output == False):
                 print("error")
-            t,des,do,job_zone = output
+            t,des,do,job_zone,_ = output
         except:
-            t,des,do,job_zone = output
+            t,des,do,job_zone,_ = output
+        print("len of title:",len(t),t.shape)
+        print("len of description:",len(des))
         title.append(t)
         description.append(des)
 
+    print(model)
     cluster_distributional_analysis(title,10,model,"Title","spectral")
     cluster_distributional_analysis(description,10,model,"Description","spectral")
 
     cluster_distributional_analysis(title,10,model,"Title")
-    cluster_distributional_analysis(description,10,model,"Description")'''
+    cluster_distributional_analysis(description,10,model,"Description")
 
 print("-------completed------")
 '''embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder-multilingual/3")
@@ -63,7 +66,7 @@ print(en_result)'''
 #print(model.encode_text())
 print("----------------Model Architecture defining---------------- ")
 models = Model_Building()
-model = models.DistillMBERTmodelDomain()
+model = models.MUSEmodelDomain()
 titles =[]
 descriptions = []
 domains =[]
@@ -72,7 +75,7 @@ test_df ={}
 
 
 for lang in langauges:
-    output = get_data_from_file(model="MDistill",language=lang)
+    output = get_data_from_file(model="M_USE",language=lang)
     try:
         if(output == False):
             print("error")
@@ -102,7 +105,7 @@ Y = to_categorical(job_zones,num_classes=5)
 print(Y.shape)
 print(Y)
 
-train("MDistill_Domain",model,t,des,do,Y,50,1e-2)
+train("M_USE_domain",model,t,des,do,Y,100,1e-3)
 for lang in test_df:
     print(lang)
     output = get_data_from_df(test_df[lang],language=lang)
@@ -117,11 +120,11 @@ for lang in test_df:
     d = {x: job_zone.count(x) for x in job_zone}
     print(d)
     Y = to_categorical(job_zone, num_classes=5)
-    score = model.evaluate([title,description],Y)
+    score = model.evaluate([title,description,domain],Y)
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
 
-    pred = model.predict([title,description])
+    pred = model.predict([title,description,domain])
     pred = np.argmax(pred, axis=1)
     label = np.argmax(Y, axis=1)
 

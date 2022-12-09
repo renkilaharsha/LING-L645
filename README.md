@@ -202,10 +202,6 @@ For XLMR BERT model student model is Xlmr-Roberta model and Bert model as Teache
     model.load_sentence_transformer_model()
     embeddings = model.encode_text()
 
-### FastText
-
-Write the content
-
 ## Experiments
 
   The Goal of this project  is to evaluate the performance/similarity of multilingual embedding models on job zone data(Onet Occupation-job zone)
@@ -437,25 +433,25 @@ Usage for training the models:
 
 A) Below table results are model's built using title, description and domain as features.
 
-|  Model Name   | Train Accuracy | Validation Accuracy | English Test Accuracy | Spanish Test Accuracy | German Test Accuracy | French Test Accuracy | Dutch Test Accuracy | Total Test Accuracy |
-|:-------------:|:--------------:|:-------------------:|:---------------------:|:---------------------:|:--------------------:|:--------------------:|:-------------------:|:-------------------:|
-  |     Mbert     |      0.96      |        0.48         |          0.9          |          0.7          |         0.55         |         0.85         |        0.55         |        0.71         |
-  | Distill Mbert |      0.93      |        0.82         |         0.80          |         0.80          |         0.90         |         0.80         |        0.90         |        0.81         |
-  |   Xlmr Bert   |      0.97      |        0.89         |         0.95          |         0.95          |         0.85         |         0.80         |        0.90         |        0.89         |
-  |     MUSE      |      158       |
-  |   Fasttext    |       32       | 
+|  Model Name   | Train Accuracy | Validation Accuracy | English Test Accuracy | Spanish Test Accuracy | German Test Accuracy | French Test Accuracy | Dutch Test Accuracy | Total Test Accuracy | No Of Parameters |
+|:-------------:|:--------------:|:-------------------:|:---------------------:|:---------------------:|:--------------------:|:--------------------:|:-------------------:|:-------------------:|:----------------:|
+  |     Mbert     |      0.96      |        0.48         |         0.80          |         0.65          |         0.50         |         0.75         |        0.85         |        0.71         |
+  | Distill Mbert |      0.99      |        0.96         |         1.00          |         1.00          |         0.95         |         0.90         |        0.85         |        0.81         |
+  |   Xlmr Bert   |      0.97      |        0.95         |         1.00          |         1.00          |         1.00         |         0.90         |        1.00         |        0.89         |
+  |     MUSE      |      0.98      |        0.94         |         0.90          |         0.95          |         0.95         |         0.95         |        0.90         |                     |
+  
 
 B) Below table results are model's built using only tile and description as features.
 
-|  Model Name   | Train Accuracy | Validation Accuracy | English Test Accuracy | Spanish Test Accuracy | German Test Accuracy | French Test Accuracy | Dutch Test Accuracy | Total Test Accuracy |
-|:-------------:|:--------------:|:-------------------:|:---------------------:|:---------------------:|:--------------------:|:--------------------:|:-------------------:|:-------------------:|
-  |     Mbert     |      289       | 
-  | Distill Mbert |      224       |
-  |   Xlmr Bert   |      220       |
-  |     MUSE      |      158       |
-  |   Fasttext    |       32       | 
+|  Model Name   | Train Accuracy | Validation Accuracy | English Test Accuracy | Spanish Test Accuracy | German Test Accuracy | French Test Accuracy | Dutch Test Accuracy | Total Test Accuracy |  No Of Parameters  |
+|:-------------:|:--------------:|:-------------------:|:---------------------:|:---------------------:|:--------------------:|:--------------------:|:-------------------:|:-------------------:|:------------------:|
+  |     Mbert     |      0.95      |        0.54         |         0.85          |         0.75          |         0.75         |         0.65         |        0.75         |
+  | Distill Mbert |      0.97      |        0.93         |         0.95          |         1.00          |         0.95         |         0.90         |        0.90         |
+  |   Xlmr Bert   |      0.96      |        0.95         |         1.00          |         0.90          |         0.95         |         0.95         |        0.95         |
+  |     MUSE      |      0.99      |        0.92         |         1.00          |         0.95          |         0.90         |         0.95         |        0.95         |
+  
 
-## Conclusion and Future work
+## Conclusion
 
 ## Referrences
 *   Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). Attention Is All You Need. arXiv. https://doi.org/10.48550/arXiv.1706.03762
