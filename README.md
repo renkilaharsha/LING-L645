@@ -206,6 +206,29 @@ For XLMR BERT model student model is Xlmr-Roberta model and Bert model as Teache
 
   The Goal of this project  is to evaluate the performance/similarity of multilingual embedding models on job zone data(Onet Occupation-job zone)
 
+### Sample data
+  
+    English language:
+
+    Title : Water Resource Specialists
+    
+    Description : Design or implement programs and strategies related to water resource issues such as supply, quality, and regulatory compliance issues.
+
+    Domain : Management Occupations
+
+    Job Zone : 4
+
+
+    German language:
+
+    Title : Wasserressourcenspezialisten
+
+    Description : Entwerfen oder Implementieren von Programmen und Strategien im Zusammenhang mit Wasserressourcenproblemen wie Versorgung, Qualit√§t und Vorschriftenproblemen.
+
+    Domain : Managementberufe
+
+    Job Zone : 4
+
 ### Visualizing the embeddings in Lower Dimensional Space
    Assuming that  multilingual language models will have semantically equivalent words/sentences of all the languages will be closer in the higher dimensional space. So to check this we are getting the embeddings for description and title from all the languages and visualizing in the 2-d space.
   
