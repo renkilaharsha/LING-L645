@@ -37,7 +37,7 @@ for model in models:
     description =[]
     for lang in langauges:
         print(lang)
-        output = get_data_from_file(model=model,language=lang)
+        output = get_data_from_file(model=model,language=lang,balance=False)
         try:
             if(output == False):
                 print("error")

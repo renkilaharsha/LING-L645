@@ -3,7 +3,7 @@
 
 
 ## ℹ️ Overview
-Representation of Text in the N-Dimensional space is key for many NlP tasks such as NER, Sentiment analysis, Classisication, Language Modelling, etc.. has gain vital importance in the recent days. These representation of text as embeddings which captures the semantic meaning of the text. Most of the embeddings are training on the english corpus and showed capability of achieving NLP tasks.  When it comes to other languages there are different models for each language which can do the tasks. But, in realtime if a product support multiple languages let say 100, deploying 100 different language models for all languages will not highly resource taking and highly expensive. Due to that there are some Multilingual language models like Multilingual Bert, Multilingual Distill Bert, Multilingual Universal Sentence Encoders, Multilingual XLMR Bert, etc.. are supporting the more than 100 different languages with single model. These word embedding models are trained and evaluated with text with general context like wikipedia, books, etc..  using cosine-similarity. When it comes to domain-specific data, we want to evaluate the model without pre-training, how it performs across different languages on the same task.
+Representation of Text in the N-Dimensional space is key for many NlP tasks such as NER, Sentiment analysis, Classification, Language Modelling, etc.. has gain vital importance in the recent days. These representation of text as embeddings which captures the semantic meaning of the text. Most of the embeddings are training on the english corpus and showed capability of achieving NLP tasks.  When it comes to other languages there are different models for each language which can do the tasks. But, in realtime if a product support multiple languages let say 100, deploying 100 different language models for all languages will not highly resource taking and highly expensive. Due to that there are some Multilingual language models like Multilingual Bert, Multilingual Distill Bert, Multilingual Universal Sentence Encoders, Multilingual XLMR Bert, etc.. are supporting the more than 100 different languages with single model. These word embedding models are trained and evaluated with text with general context like wikipedia, books, etc..  using cosine-similarity. When it comes to domain-specific data, we want to evaluate the model without pre-training, how it performs across different languages on the same task.
 
 ## Languages Considered for Experiment
     - English (language Code - EN)
@@ -22,7 +22,7 @@ Required packages to install:
 The ONET Program is the nation's primary source of occupational information. Valid data are essential to understanding the rapidly changing nature of work and how it impacts the workforce and U.S. economy. From this information, applications are developed to facilitate the development and maintenance of a skilled workforce.
 It has detailed descriptions of the world of work for use by job seekers, workforce development and HR professionals, students, developers, researchers, and more!
 
-Out of wide variety of Onet data. We have choosen Jobzone data for our classification experiments.
+Out of wide variety of Onet data. We have chosen Jobzone data for our classification experiments.
 
 #### Job Zone
 A Job Zone is a group of occupations that are similar in:
@@ -98,7 +98,7 @@ Due to imbalance in Job Zone data the data is up sampled and the counts for each
   |    5     |  158   |
   |    1     |   32   |
 
-The data imbalancing code implementation can be found in below path: 
+The data balancing code implementation can be found in below path: 
 
     --- Project
         |--- src
@@ -281,7 +281,7 @@ Unlike from the title cosine similarity the distribution is not uniform for all 
 Description is the text where the duties of particular occupation is described. the title and domain having a word or couple which will have less semantic meaning. So, description will give an correct estimate of which embedding will encode better semantic meaning. After observing plots the Xlmr-Bert model out performs all the other models. M-Bert is not capturing the language relation when comapred to all.
 
 ### Multi cluster distribution Analysis
-In this analysis decompose the problem into two simpler subproblems: E = Eembed ◦ Ecluster, where Ecluster : L × V →C deterministically maps words to multilingual clusters C, and E_embed : C → R assigns a vector to each cluster.We use a bilin- gual dictionary to find clusters of translationally equivalent words, then use distributional similari- ties of the clusters in monolingual corpora from all languages in L to estimate an embedding for each cluster.
+In this analysis decompose the problem into two simpler subproblems: E = Eembed ◦ Ecluster, where Ecluster : L × V →C deterministically maps words to multilingual clusters C, and E_embed : C → R assigns a vector to each cluster.We use a bilingual dictionary to find clusters of translationally equivalent words, then use distributional similari- ties of the clusters in monolingual corpora from all languages in L to estimate an embedding for each cluster.
 
 The Below plots are the Multi-cluster Distributional analysis for the ***Description*** using Gaussian Mixture Model clustering: 
 
@@ -290,12 +290,17 @@ The Below plots are the Multi-cluster Distributional analysis for the ***Descrip
 |    <img width="1604" alt="" src="project/output/cluster_plots/M_USE_Description_GMM_cluster_plot.png"> M-USE    | <img width="1604" alt="" src="project/output/cluster_plots/MDistill_Description_GMM_cluster_plot.png"> M-DISTILL BERT |                           
 | <img width="1604" alt="" src="project/output/cluster_plots/Multi_Bert_Description_GMM_cluster_plot.png"> M-BERT |   <img width="1604" alt="" src="project/output/cluster_plots/Xlmr_Bert_Description_GMM_cluster_plot.png"> XLMR-BERT   |                           
 
+
+In the above bar plots each bar represents the no of data points in language pair is in the same cluster. As we see Multi-lingual bert has less frequency when compared to all other models. Xlmr and MUSE model are consistent over all the language pairs.
+
 The Below plots are the Multi-cluster Distributional analysis for the ***Title*** using Gaussian Mixture Model clustering: 
 
 |                                                                                                           |                                                                                                                 |
 |:---------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------:|
 |    <img width="1604" alt="" src="project/output/cluster_plots/M_USE_Title_GMM_cluster_plot.png"> M-USE    | <img width="1604" alt="" src="project/output/cluster_plots/MDistill_Title_GMM_cluster_plot.png"> M-DISTILL BERT |                           
 | <img width="1604" alt="" src="project/output/cluster_plots/Multi_Bert_Title_GMM_cluster_plot.png"> M-BERT |   <img width="1604" alt="" src="project/output/cluster_plots/Xlmr_Bert_Title_GMM_cluster_plot.png"> XLMR-BERT   |                           
+
+In the above bar plots each bar represents the no of data points in language pair is in the same cluster. As we see Multi-lingual bert has less frequency when compared to all other models. when it compared to Description based clustering the title model for xlmr is not performed in similar manner. But when we take only title M-Distill Bert is consistent over the all language pairs. 
 
 
 Below is the directory where you can find the analysis plots.
@@ -317,7 +322,7 @@ The usage of cluster analysis:
     title = []
     description =[]
     for lang in langauges:
-        output = get_data_from_file(model=model,language=lang)
+        output = get_data_from_file(model=model,language=lang,balance=False)
         try:
             if(output == False):
                 print("error")
@@ -435,25 +440,29 @@ A) Below table results are model's built using title, description and domain as 
 
 |  Model Name   | Train Accuracy | Validation Accuracy | English Test Accuracy | Spanish Test Accuracy | German Test Accuracy | French Test Accuracy | Dutch Test Accuracy | Total Test Accuracy | No Of Parameters |
 |:-------------:|:--------------:|:-------------------:|:---------------------:|:---------------------:|:--------------------:|:--------------------:|:-------------------:|:-------------------:|:----------------:|
-  |     Mbert     |      0.96      |        0.48         |         0.80          |         0.65          |         0.50         |         0.75         |        0.85         |        0.71         |
-  | Distill Mbert |      0.99      |        0.96         |         1.00          |         1.00          |         0.95         |         0.90         |        0.85         |        0.81         |
-  |   Xlmr Bert   |      0.97      |        0.95         |         1.00          |         1.00          |         1.00         |         0.90         |        1.00         |        0.89         |
-  |     MUSE      |      0.98      |        0.94         |         0.90          |         0.95          |         0.95         |         0.95         |        0.90         |                     |
+  |     Mbert     |      0.96      |        0.48         |         0.80          |         0.65          |         0.50         |         0.75         |        0.85         |        0.71         |       1.7M       |
+  | Distill Mbert |      0.99      |        0.96         |         1.00          |         1.00          |         0.95         |         0.90         |        0.85         |        0.94         |       2.5M       |
+  |   Xlmr Bert   |      0.97      |        0.95         |         1.00          |         1.00          |         1.00         |         0.90         |        1.00         |        0.98         |       1.7M       |
+  |     MUSE      |      0.98      |        0.94         |         0.90          |         0.95          |         0.95         |         0.95         |        0.90         |        0.93         |       2.5M       |
   
 
 B) Below table results are model's built using only tile and description as features.
 
-|  Model Name   | Train Accuracy | Validation Accuracy | English Test Accuracy | Spanish Test Accuracy | German Test Accuracy | French Test Accuracy | Dutch Test Accuracy | Total Test Accuracy |  No Of Parameters  |
-|:-------------:|:--------------:|:-------------------:|:---------------------:|:---------------------:|:--------------------:|:--------------------:|:-------------------:|:-------------------:|:------------------:|
-  |     Mbert     |      0.95      |        0.54         |         0.85          |         0.75          |         0.75         |         0.65         |        0.75         |
-  | Distill Mbert |      0.97      |        0.93         |         0.95          |         1.00          |         0.95         |         0.90         |        0.90         |
-  |   Xlmr Bert   |      0.96      |        0.95         |         1.00          |         0.90          |         0.95         |         0.95         |        0.95         |
-  |     MUSE      |      0.99      |        0.92         |         1.00          |         0.95          |         0.90         |         0.95         |        0.95         |
+|  Model Name   | Train Accuracy | Validation Accuracy | English Test Accuracy | Spanish Test Accuracy | German Test Accuracy | French Test Accuracy | Dutch Test Accuracy | Total Test Accuracy | No Of Parameters |
+|:-------------:|:--------------:|:-------------------:|:---------------------:|:---------------------:|:--------------------:|:--------------------:|:-------------------:|:-------------------:|:----------------:|
+  |     Mbert     |      0.95      |        0.54         |         0.85          |         0.75          |         0.75         |         0.65         |        0.75         |        0.75         |      0.75M       |
+  | Distill Mbert |      0.97      |        0.93         |         0.95          |         1.00          |         0.95         |         0.90         |        0.90         |        0.94         |      0.67M       |
+  |   Xlmr Bert   |      0.96      |        0.95         |         1.00          |         0.90          |         0.95         |         0.95         |        0.95         |        0.96         |      0.75M       |
+  |     MUSE      |      0.99      |        0.92         |         1.00          |         0.95          |         0.90         |         0.95         |        0.95         |        0.95         |      0.65M       |
   
+By analysing above 2 tables we can depict that the Xlmr model with all features as input is performed well upon all models. MUSE and Mdistill-Bert is more or less is giving equal accuracy. The Domain feature is not making quite a difference in terms of accuracy. when it comes to execution time and model size we can take only title and description features with compromising in 2-3% accuracy.   
 
 ## Conclusion
+  The Efficiency of Multi-lingual Embeddings on the O*net data is performed using Multi-lingual Bert, Multi-lingual Distill Bert, Multi-lingual Universal Sentence Encoder and XLMR-Bert. Since, the training mechanism of XLMR-Bert student-teacher model imposes a strict condition to match the teacher language embedding makes the Xlmr bert embedding consistent over all the languages as observed from all analysis. Multi-lingual Bert  is the least performer in all analysis. The fewer data for classification makes the models some what overfit and better results may expect which can clearly distinguish the models' performance. If we have only english data and wants to deploy multilingual model for task we can choose XLMR-BERT as initial embedding to try with. 
 
-## Referrences
+
+
+## References
 *   Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). Attention Is All You Need. arXiv. https://doi.org/10.48550/arXiv.1706.03762
 *   Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks. arXiv. https://doi.org/10.48550/arXiv.1908.10084.
 *   Cer, D., Yang, Y., Kong, S., Hua, N., Limtiaco, N., John, R. S., Constant, N., Yuan, S., Tar, C., Sung, Y., Strope, B., & Kurzweil, R. (2018). Universal Sentence Encoder. arXiv. https://doi.org/10.48550/arXiv.1803.11175
