@@ -79,7 +79,7 @@ def calculate_sentence_perplexity(S):
         final_probabaility *= prob
 
     perplex_prob = 1/final_probabaility
-    perplex_prob = perplex_prob**(1/len(tokens))
+    perplex_prob = perplex_prob**(-1/len(tokens))
     print('%.6f\t%.6f\t' % (perplex_prob, math.log(perplex_prob)), ['<BOS>'] + tokenise(S))
 
 #print(model)
