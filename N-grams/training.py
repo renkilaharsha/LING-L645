@@ -12,24 +12,7 @@ model = defaultdict(lambda: defaultdict(float))
 
 bigrams, unigrams = defaultdict(Counter), Counter()  # Unigram and bigram counts
 k = 1
-def calculate_perplexity_probability(S,unigrams,bigrams,model,k):
-    val = 1
-    if S[0] + " " + S[1] in bigrams:
-        val = val * bigrams[S[0] + " " + S[1]]
-        k = k * bigrams[S[0] + " " + S[1]]
-    else:
-        val = val / (bigram[k[j - 1]]['<VAL>'] + len(unigram))
-        model_p = model_p / (bigram[k[j - 1]]['<VAL>'] + len(unigram))
 
-    for j in range(1, len(k)):
-        t_len += 1
-        if k[j] in bigram[k[j - 1]]:
-            val = val * bigram[k[j - 1]][k[j]]
-            model_p = model_p * bigram[k[j - 1]][k[j]]
-        else:
-            val = val / (bigram[k[j - 1]]['<VAL>'] + len(unigram))
-            model_p = model_p / (bigram[k[j - 1]]['<VAL>'] + len(unigram))
-    ans.append([i, val, math.log(val), val ** (-1 / len(unigram))])
 def calculate_probability(S, unigrams, bigrams,model):
 
     if(S[0] + " " + S[1] in bigrams):
@@ -85,7 +68,7 @@ def calculate_sentence_probability(S):
         final_probabaility *= prob
 
     print('%.6f\t%.6f\t' % (final_probabaility, math.log(final_probabaility)), ['<BOS>'] + tokenise(S))
-
+    return final_probabaility
 
 def calculate_sentence_perplexity(S):
     tokens = ['<BOS>'] + tokenise(S)
@@ -95,7 +78,9 @@ def calculate_sentence_perplexity(S):
         # print(tokens[i:i+2],prob)
         final_probabaility *= prob
 
-    print('%.6f\t%.6f\t' % (final_probabaility, math.log(final_probabaility)), ['<BOS>'] + tokenise(S))
+    perplex_prob = 1/final_probabaility
+    perplex_prob = perplex_prob**(1/len(tokens))
+    print('%.6f\t%.6f\t' % (perplex_prob, math.log(perplex_prob)), ['<BOS>'] + tokenise(S))
 
 #print(model)
 sentences = ["where are you?", "were you in england?", "are you in mexico?", "i am in mexico.",
@@ -103,7 +88,13 @@ sentences = ["where are you?", "were you in england?", "are you in mexico?", "i 
 
 for sent in sentences:
     calculate_sentence_probability(sent)
-# !!! Now calculate the probabilities !!!
+
+print("---------------------------------------")
+print(" Probability of sentence using perplexity")
+
+for sent in sentences:
+    calculate_sentence_perplexity(sent)
+    # !!! Now calculate the probabilities !!!
 #print(model.items())
 print('Saved %d bigrams.' % sum([len(i) for i in model.items()]))
 pickle.dump(dict(model), open('model_ngram.lm', 'wb'))
