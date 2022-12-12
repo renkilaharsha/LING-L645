@@ -1,9 +1,10 @@
-import re
+import regex as re
 from collections import Counter
 
-def words(text): return re.findall(r'\w+', text.lower())
+def words(text): return re.findall(r'\p{InDevanagari}+', text)
 
-WORDS = Counter(words(open('big.txt').read()))
+WORDS = Counter(words(open('hindi.txt').read()))
+
 
 def P(word, N=sum(WORDS.values())):
     "Probability of `word`."
@@ -23,7 +24,7 @@ def known(words):
 
 def edits1(word):
     "All edits that are one edit away from `word`."
-    letters    = 'abcdefghijklmnopqrstuvwxyz'
+    letters    = 'ऄअआइईउऊऋऌऍऎएऐऑऒओऔकखगघङचछजझञटठडढणतथदधनऩपफबभमयरऱलळऴवशषसहऺऻ़ऽािीुूृॄॅॆेैॉॊोौ्ॎॏॐ॒॑॓॔ॕॖॗक़ख़ग़ज़ड़ढ़फ़य़ॠॡॢॣॱॲॳॴॵॶॷॸॹॺॻॼॽॾ'
     splits     = [(word[:i], word[i:])    for i in range(len(word) + 1)]
     deletes    = [L + R[1:]               for L, R in splits if R]
     transposes = [L + R[1] + R[0] + R[2:] for L, R in splits if len(R)>1]
@@ -34,3 +35,13 @@ def edits1(word):
 def edits2(word):
     "All edits that are two edits away from `word`."
     return (e2 for e1 in edits1(word) for e2 in edits1(e1))
+
+
+
+print(correction('हदी'))
+
+print(correction('षोडशपचार'))
+print(correction('निम्लखित'))
+
+print(len(edits1('हदी')))
+print(known(edits1('हदी')))

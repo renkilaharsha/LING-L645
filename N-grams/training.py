@@ -11,8 +11,25 @@ def tokenise(s):
 model = defaultdict(lambda: defaultdict(float))
 
 bigrams, unigrams = defaultdict(Counter), Counter()  # Unigram and bigram counts
+k = 1
+def calculate_perplexity_probability(S,unigrams,bigrams,model,k):
+    val = 1
+    if S[0] + " " + S[1] in bigrams:
+        val = val * bigrams[S[0] + " " + S[1]]
+        k = k * bigrams[S[0] + " " + S[1]]
+    else:
+        val = val / (bigram[k[j - 1]]['<VAL>'] + len(unigram))
+        model_p = model_p / (bigram[k[j - 1]]['<VAL>'] + len(unigram))
 
-
+    for j in range(1, len(k)):
+        t_len += 1
+        if k[j] in bigram[k[j - 1]]:
+            val = val * bigram[k[j - 1]][k[j]]
+            model_p = model_p * bigram[k[j - 1]][k[j]]
+        else:
+            val = val / (bigram[k[j - 1]]['<VAL>'] + len(unigram))
+            model_p = model_p / (bigram[k[j - 1]]['<VAL>'] + len(unigram))
+    ans.append([i, val, math.log(val), val ** (-1 / len(unigram))])
 def calculate_probability(S, unigrams, bigrams,model):
 
     if(S[0] + " " + S[1] in bigrams):
@@ -57,6 +74,7 @@ while line:  # Collect counts from standard input
 print(bigrams)
 
 
+
 def calculate_sentence_probability(S):
     tokens = ['<BOS>'] + tokenise(S)
 
@@ -68,11 +86,22 @@ def calculate_sentence_probability(S):
 
     print('%.6f\t%.6f\t' % (final_probabaility, math.log(final_probabaility)), ['<BOS>'] + tokenise(S))
 
+
+def calculate_sentence_perplexity(S):
+    tokens = ['<BOS>'] + tokenise(S)
+    final_probabaility = 1
+    for i in range(len(tokens) - 1):
+        prob = calculate_probability(tokens[i:i + 2], unigrams, bigrams, model)
+        # print(tokens[i:i+2],prob)
+        final_probabaility *= prob
+
+    print('%.6f\t%.6f\t' % (final_probabaility, math.log(final_probabaility)), ['<BOS>'] + tokenise(S))
+
 #print(model)
 sentences = ["where are you?", "were you in england?", "are you in mexico?", "i am in mexico.",
              "are you still in mexico?"]
 
-for sent in semtence:
+for sent in sentences:
     calculate_sentence_probability(sent)
 # !!! Now calculate the probabilities !!!
 #print(model.items())
